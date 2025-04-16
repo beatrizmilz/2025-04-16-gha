@@ -22,7 +22,7 @@ jobs:
         run: |
           mkdir -p data
           today=$(date -u +'%Y-%m-%d')                # Apenas data (YYYY-MM-DD)
-          curl -X POST "https://app.anm.gov.br/SIGBM/Publico/ClassificacaoNacionalDaBarragem/ExportarExcel" \
+          curl --insecure -X POST "https://app.anm.gov.br/SIGBM/Publico/ClassificacaoNacionalDaBarragem/ExportarExcel" \
             -o data/sigbm_${today}.xlsx
 
       - name: Configure Git
