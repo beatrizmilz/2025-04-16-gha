@@ -1,0 +1,39 @@
+# .github/workflows/download-sigbm-data.yml
+
+name: Download SIGBM Data            # Nome descritivo do workflow
+
+on:
+  schedule:
+    - cron: '0 12 * * *'             # 12:00 UTC corresponde a 09:00 BRT
+  workflow_dispatch:                 # Permite disparo manual
+
+permissions:
+  contents: write                    # Permissão mínima para commitar e push
+
+jobs:
+  download:
+    runs-on: ubuntu-latest           # Ambiente Linux mais recente
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download Excel from SIGBM API
+        run: |
+          mkdir -p data
+          today=$(date -u +'%Y-%m-%d')                # Apenas data (YYYY-MM-DD)
+          curl -X POST "https://app.anm.gov.br/SIGBM/Publico/ClassificacaoNacionalDaBarragem/ExportarExcel" \
+            -o data/sigbm_${today}.xlsx
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "milz.bea@gmail.com"
+          git config --local user.name "Beatriz Milz"
+
+      - name: Commit and Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add data/
+          git commit -m "chore: download SIGBM data on ${today}"
+          git push
