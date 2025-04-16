@@ -1,0 +1,12 @@
+name: Exemplo mais simples possível
+
+on: 
+  workflow_dispatch: 
+
+jobs:
+  escrever_mensagem: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exibir mensagem
+        run: echo "Workflow acionado por um botão! Deu certo galera!"
+    
